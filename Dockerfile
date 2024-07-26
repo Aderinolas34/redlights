@@ -1,12 +1,22 @@
-# Base image for the Docker container
-FROM openjdk:16
+# Use an official Python runtime as a parent image
+FROM python:3.9
 
-# Copy the JAR file from the local directory to the /tmp directory inside the container
-COPY ./target/devops.jar /tmp
+# Set the working directory in the container
+WORKDIR /app
 
-# Set the working directory to /tmp
-WORKDIR /tmp
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Set the entry point for the container to run the JAR file using the java command
-ENTRYPOINT ["java", "-jar", "devops.jar", "db:3306", "30000"]
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Make port 5000 available to the world outside this container
+EXPOSE 5000
+
+# Define environment variable
+ENV NAME PopulationInfoSystem
+
+# Run app.py when the container launches
+CMD ["python", "app.py"]
+
 
